@@ -119,6 +119,7 @@ conf_php_version_debian_family: 5.6
 #
 conf_varnish_enable: true
 conf_varnish_version: 3
+conf_varnish_storage_backend: malloc,256m
 
 #
 # rbenv
