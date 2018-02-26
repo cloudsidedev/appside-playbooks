@@ -9,7 +9,7 @@ Description=Varnish Cache, a high-performance HTTP accelerator
 Type=forking
 LimitNOFILE=131072
 LimitMEMLOCK=82000
-ExecStart=/usr/sbin/varnishd -a :{{ conf_varnish_listen_port }} -T localhost:{{ conf_varnish_listen_admin_port }} -f /etc/varnish/default.vcl -S /etc/varnish/secret -s malloc,256m
+ExecStart=/usr/sbin/varnishd -a :{{ conf_varnish_listen_port }} -T localhost:{{ conf_varnish_listen_admin_port }} -f /etc/varnish/default.vcl -S /etc/varnish/secret -s {{ conf_varnish_storage_backend }}
 ExecReload=/usr/share/varnish/reload-vcl
 
 [Install]
