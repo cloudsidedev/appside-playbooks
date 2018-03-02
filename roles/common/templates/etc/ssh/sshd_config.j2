@@ -115,6 +115,7 @@ Match Group {{ conf_sftp_group_name }}
   X11Forwarding no
   ForceCommand internal-sftp {{ conf_sftp_enable_logging | ternary('-l VERBOSE', '') }}
   PasswordAuthentication {{ conf_sftp_allow_passwords | ternary('yes', 'no') }}
+  PubkeyAuthentication {{ conf_sftp_allow_pubkey | ternary('yes', 'no') }}
 {% else %}
 Subsystem sftp /usr/lib/openssh/sftp-server
 {% endif %}
