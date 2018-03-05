@@ -12,7 +12,6 @@ ANSIBLE_TAGS=ENV['ANSIBLE_TAGS']
 ANSIBLE_TAGS_SKIP=ENV['ANSIBLE_TAGS_SKIP']
 
 # Custom settings which can be overriden via Vagrantfile.local.yml
-atlantis_synced_folder_appflow = "~/Documents/webdev/appflow"
 atlantis_synced_folder_webdev = "~/Documents/webdev/development"
 atlantis_synced_folder_mount_options = 'dmode=0775,fmode=0664'
 atlantis_synced_folder_type = ""
@@ -25,9 +24,6 @@ dir = File.dirname(File.expand_path(__FILE__))
 
 if File.file?("#{dir}/Vagrantfile.local.yml")
   custom_settings = YAML.load_file("#{dir}/Vagrantfile.local.yml")
-  if custom_settings['synced_folder']['appflow_folder']
-    atlantis_synced_folder_appflow = custom_settings['synced_folder']['appflow_folder']
-  end
   if custom_settings['synced_folder']['webdev_folder']
     atlantis_synced_folder_webdev = custom_settings['synced_folder']['webdev_folder']
   end
@@ -66,7 +62,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     atlantis.vm.box_url = atlantis_vm_box_url
     atlantis.vm.network :private_network, ip: "192.168.80.2"
     atlantis.vm.synced_folder atlantis_synced_folder_webdev, "/var/www/vhosts", owner: "deploy", group: "www-data", :mount_options => [atlantis_synced_folder_mount_options], type: atlantis_synced_folder_type, smb_username: atlantis_synced_folder_smb_username, smb_password: atlantis_synced_folder_smb_password
-    atlantis.vm.synced_folder atlantis_synced_folder_appflow, "/var/appflow", owner: "deploy", group: "www-data", :mount_options => [atlantis_synced_folder_mount_options], type: atlantis_synced_folder_type
 
     atlantis.vm.provider "virtualbox" do |v|
       v.customize ["modifyvm", :id, "--cpus", 2, "--memory", 2048, "--name", "vagrant-atlantis", "--natdnshostresolver1", "on"]
@@ -88,7 +83,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     atlantiscentos.vm.box_url = "Vagrant-Boxes/centos64.box"
     atlantiscentos.vm.network :private_network, ip: "192.168.80.3"
     atlantiscentos.vm.synced_folder atlantis_synced_folder_webdev, "/var/www/vhosts", owner: "deploy", group: "www-data", :mount_options => ['dmode=0775,fmode=0775']
-    atlantiscentos.vm.synced_folder atlantis_synced_folder_appflow, "/var/appflow", owner: "deploy", group: "www-data", :mount_options => ['dmode=0775,fmode=0775']
 
     atlantiscentos.vm.provider "virtualbox" do |v|
       v.customize ["modifyvm", :id, "--cpus", 2, "--memory", 2048, "--name", "vagrant-atlantis-centos", "--natdnshostresolver1", "on"]
@@ -106,7 +100,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     testing.vm.network :private_network, ip: "192.168.90.2"
     testing.vm.boot_timeout = 400 # defaults 300
     testing.vm.synced_folder "~/Documents/webdev/development", "/var/www/vhosts", owner: "deploy", group: "www-data", :mount_options => ['dmode=0775,fmode=0775']
-    testing.vm.synced_folder "~/Documents/webdev/appflow", "/var/appflow", owner: "deploy", group: "www-data", :mount_options => ['dmode=0775,fmode=0775']
 
     testing.vm.provider "virtualbox" do |v|
       v.customize ["modifyvm", :id, "--cpus", 1, "--memory", 512, "--name", "vagrant-testing", "--natdnshostresolver1", "on"]
@@ -140,7 +133,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     testingcentos.vm.network :private_network, ip: "192.168.90.3"
     config.vm.synced_folder ".", "/home/vagrant/sync", disabled: true
     # testingcentos.vm.synced_folder "~/Documents/webdev/development", "/var/www/vhosts", owner: "deploy", group: "www-data", :mount_options => ['dmode=0775,fmode=0775']
-    # testingcentos.vm.synced_folder "~/Documents/webdev/appflow", "/var/appflow", owner: "deploy", group: "www-data", :mount_options => ['dmode=0775,fmode=0775']
 
     testingcentos.vm.provider "virtualbox" do |v|
       v.customize ["modifyvm", :id, "--cpus", 1, "--memory", 512, "--name", "vagrant-testing-centos", "--natdnshostresolver1", "on"]
