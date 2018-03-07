@@ -13,14 +13,11 @@ import std;
 {% if conf_varnish_backend_default is defined %}
 backend default {
   {{ conf_varnish_backend_default }}
-
-  .probe = {
-    .url = "/";
-    .timeout = 1s;
-    .interval = 1s;
-    .window = 5;
-    .threshold = 3;
-  }
+  {% if conf_mysql_flavour_debian_family == "percona-xtradb-cluster" %}
+{{ conf_varnish_backend_probe_mysql_default }}
+  {% else %}}
+{{ conf_varnish_backend_probe_default }}
+  {% endif %}
 }
 {% endif %}
 
