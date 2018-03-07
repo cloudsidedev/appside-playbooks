@@ -115,19 +115,19 @@
     - xinetd
   environment:
     DEBIAN_FRONTEND: noninteractive
-  when: ansible_os_family == "Debian" and conf_env != "development" and conf_galera_cluster == true
+  when: ansible_os_family == "Debian" #and conf_env != "development" and conf_galera_cluster == true
   ignore_errors: yes
   tags: [ mysql, percona, clustercheck ]
 
 - name: update /etc/services (Debian family)
   lineinfile: "dest=/etc/services line='mysqlchk        9200/tcp                        # mysqlchk' insertafter='^xinetd' state=present"
-  when: ansible_os_family == "Debian" and conf_env != "development" and conf_galera_cluster == true
+  when: ansible_os_family == "Debian" #and conf_env != "development" and conf_galera_cluster == true
   tags: [ mysql, percona, clustercheck ]
 
 - name: update /etc/xinetd.d/mysqlchk (Debian family)
   lineinfile: "dest=/etc/xinetd.d/mysqlchk line='        server_args = {{ conf_mysql_clustercheck_user }} {{ conf_mysql_clustercheck_password }} {{ conf_mysql_clustercheck_available_when_donor }} /dev/null 0' insertafter='^        # 55-to-56 upgrade' state=present"
   notify: handle_restart_xinetd
-  when: ansible_os_family == "Debian" and conf_env != "development" and conf_galera_cluster == true
+  when: ansible_os_family == "Debian" #and conf_env != "development" and conf_galera_cluster == true
   tags: [ mysql, percona, clustercheck ]
 
 - name: bootstrap-pxc (RedHat family)

@@ -10,6 +10,9 @@ conf_mysql_version_debian_family: 5.6
 conf_mysql_expire_logs_days: 3
 conf_mysql_thread_stack: 576K
 conf_mysql_key_buffer: 16M
+conf_mysql_clustercheck_user: clustercheck
+conf_mysql_clustercheck_password: clustercheck
+conf_mysql_clustercheck_available_when_donor: 0
 
 #
 # galeranotify

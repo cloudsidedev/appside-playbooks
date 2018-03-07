@@ -99,7 +99,8 @@
 
 - name: create DB clustercheck user
   mysql_user: check_implicit_admin=yes name={{ conf_mysql_clustercheck_user }} password={{ conf_mysql_clustercheck_password }} host=% priv="*.*:PROCESS" state=present
-  when: conf_env != "development" and conf_galera_cluster == true
+  when: conf_mysql_flavour_debian_family == "percona-xtradb-cluster"
+  # when: conf_env != "development" and conf_galera_cluster == true
   ignore_errors: yes
   tags: [ mysql, percona, clustercheck, mysql-users ]
 
