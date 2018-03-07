@@ -113,8 +113,11 @@
     - html/index.html
   tags: [ apache2, apache2-conf ]
 
-- name: copy www index.php from template
-  template: src=etc/apache2/index.php.j2 dest=/var/www/html/index.php
+- name: index and health PHP templates
+  template: src=etc/apache2/{{ item }}.j2 dest=/var/www/html/{{ item }}
+  with_items:
+    - index.php
+    - health.php
   tags: [ apache2, apache2-conf ]
 
 - name: symlink www index.php

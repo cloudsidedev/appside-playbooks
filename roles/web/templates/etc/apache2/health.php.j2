@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * --- THIS FILE IS AUTOMATICALLY PROVISIONED THROUGH ANSIBLE ---
+ */
+
+function is_working_url($url) {
+        $handle = curl_init($url);
+        curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($handle, CURLOPT_NOBODY, true);
+        curl_exec($handle);
+
+        $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+        curl_close($handle);
+
+        if ($httpCode >= 200 && $httpCode < 300) {
+                http_response_code(200);
+                return true;
+        } else {
+                http_response_code(503);
+                return false;
+        }
+}
+
+if (is_working_url("http://localhost:9200")) {
+    echo "MySQL running.";
+} else {
+    echo "MySQL not running.";
+}
+
+?>
