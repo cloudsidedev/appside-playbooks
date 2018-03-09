@@ -53,7 +53,8 @@ DAEMON_OPTS="-a :{{ conf_varnish_listen_port }} \
              -T localhost:{{ conf_varnish_listen_admin_port }} \
              -f /etc/varnish/default.vcl \
              -S /etc/varnish/secret \
-             -s {{ conf_varnish_storage_backend }}"
+             -s {{ conf_varnish_storage_backend }} \
+             -p workspace_client={{ conf_varnish_parameter_workspace_client }}"
 
 
 ## Alternative 3, Advanced configuration
