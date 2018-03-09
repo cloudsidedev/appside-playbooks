@@ -2,8 +2,13 @@
 
 # file: playbooks/roles/lb/tasks/keepalived.yml
 
+- name: enable repo ppa:keepalived/stable (Ubuntu)
+  apt_repository: repo='ppa:keepalived/stable' update_cache=yes state=present
+  when: ansible_distribution == "Ubuntu"
+  tags: [ haproxy, keepalived ]
+
 - name: be sure keepalived packages are installed
-  package: name={{ item }} state=installed
+  package: name={{ item }} state=latest
   with_items:
     - keepalived
   # when: ansible_distribution == "Ubuntu"
