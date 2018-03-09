@@ -9,7 +9,7 @@
 # TODO a2enmod cgi
 
 - name: munin master packages (Debian family)
-  apt: pkg={{ item }} update_cache=yes state=latest
+  apt: pkg={{ item }} update_cache=no state=latest
   with_items:
     - munin
     - libnet-cidr-lite-perl
@@ -21,7 +21,7 @@
   tags: [ munin ]
 
 - name: munin client packages (Debian family)
-  apt: pkg={{ item }} update_cache=yes state=latest
+  apt: pkg={{ item }} update_cache=no state=latest
   with_items:
     - munin-node
     - libnet-cidr-lite-perl
