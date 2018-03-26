@@ -16,6 +16,7 @@
   when:
     - conf_autossh_client is defined and conf_autossh_client == true
     - ansible_os_family == "Debian"
+  ignore_errors: yes
   tags: [ autossh ]
 
 - name: provision autossh private key
