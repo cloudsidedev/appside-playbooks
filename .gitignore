@@ -5,6 +5,7 @@
 __*
 _build/
 *.retry
+*.log
 nohup.out
 .vagrant
 Vagrant-Boxes
