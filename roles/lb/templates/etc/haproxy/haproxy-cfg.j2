@@ -51,14 +51,16 @@ defaults
 # WWW #
 #######
 frontend www-frontend
-    mode http
+    mode {{ conf_haproxy_www_mode }}
     compression algo gzip
     compression type text/html text/plain text/javascript application/javascript application/xml application/json text/css image/svg+xml
     timeout client 5000
 
+{% if conf_haproxy_www_mode == "http" %}
     option httplog
     option forwardfor
     option http-server-close
+{% endif %}
 
 {% if conf_haproxy_www_request is defined %}
     # request
@@ -83,6 +85,7 @@ frontend www-frontend
     {{ conf_haproxy_www_acl }}
 {% endif %}
 
+{% if conf_haproxy_www_mode == "http" %}
 {% if conf_letsencrypt_enable is defined and conf_letsencrypt_enable == true %}
 {% if conf_haproxy_letsencrypt_backend is defined %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
@@ -96,14 +99,80 @@ frontend www-frontend
     bind :443 ssl crt /etc/certs/ no-sslv3 ciphers EECDH+AESGCM:EDH+AESGCM:EECDH+AES256:EDH+AES256:EECDH+AES128:EDH+AES:RSA+AESGCM:RSA+AES:!aNULL:!eNULL:!LOW:!EXPORT:!MEDIUM:!MD5:!PSK:!RSAPSK:!SRP:!DSS:!CAMELLIA:!RC4:!3DES
 {% endif %}
 {% endif %}
+{% endif %}
     bind :80
 
+{% if conf_haproxy_www_mode == "http" %}
     stats enable
       stats uri /lb
       stats realm Haproxy\ Statistics
       stats auth {{ conf_lbtier_stats_auth }}
+{% endif %}
 
     default_backend {{ conf_haproxy_www_default_backend }}
+
+{% if conf_haproxy_www_mode == "tcp" %}
+###########
+# WWW-SSL #
+###########
+frontend www-ssl-frontend
+    mode {{ conf_haproxy_www_ssl_mode }}
+    compression algo gzip
+    compression type text/html text/plain text/javascript application/javascript application/xml application/json text/css image/svg+xml
+    timeout client 5000
+
+{% if conf_haproxy_www_ssl_mode == "http" %}
+    option httplog
+    option forwardfor
+    option http-server-close
+{% endif %}
+
+{% if conf_haproxy_www_ssl_request is defined %}
+    # request
+    {{ conf_haproxy_www_ssl_request }}
+{% endif %}
+
+{% if conf_haproxy_www_ssl_redirect is defined %}
+    # redirect
+    {{ conf_haproxy_www_ssl_redirect }}
+{% endif %}
+
+{% if conf_letsencrypt_enable is defined and conf_letsencrypt_enable == true %}
+{% if conf_haproxy_letsencrypt_backend is defined %}
+    # ACL Let’s Encrypt
+    acl app_letsencrypt path_beg /.well-known/acme-challenge/
+    use_backend letsencrypt-backend if app_letsencrypt
+{% endif %}
+{% endif %}
+
+{% if conf_haproxy_www_ssl_acl is defined %}
+    # ACL
+    {{ conf_haproxy_www_ssl_acl }}
+{% endif %}
+
+{% if conf_letsencrypt_enable is defined and conf_letsencrypt_enable == true %}
+{% if conf_haproxy_letsencrypt_backend is defined %}
+    # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
+    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs no-sslv3 ciphers EECDH+AESGCM:EDH+AESGCM:EECDH+AES256:EDH+AES256:EECDH+AES128:EDH+AES:RSA+AESGCM:RSA+AES:!aNULL:!eNULL:!LOW:!EXPORT:!MEDIUM:!MD5:!PSK:!RSAPSK:!SRP:!DSS:!CAMELLIA:!RC4:!3DES
+{% endif %}
+{% else %}
+{% if conf_haproxy_disable_ssl is defined and conf_haproxy_disable_ssl == true %}
+    # SSL disabled by conf_haproxy_disable_ssl: true
+{% else %}
+    # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
+    bind :443 ssl crt /etc/certs/ no-sslv3 ciphers EECDH+AESGCM:EDH+AESGCM:EECDH+AES256:EDH+AES256:EECDH+AES128:EDH+AES:RSA+AESGCM:RSA+AES:!aNULL:!eNULL:!LOW:!EXPORT:!MEDIUM:!MD5:!PSK:!RSAPSK:!SRP:!DSS:!CAMELLIA:!RC4:!3DES
+{% endif %}
+{% endif %}
+
+{% if conf_haproxy_www_ssl_mode == "http" %}
+    stats enable
+      stats uri /lb
+      stats realm Haproxy\ Statistics
+      stats auth {{ conf_lbtier_stats_auth }}
+{% endif %}
+
+    default_backend {{ conf_haproxy_www_ssl_default_backend }}
+{% endif %}
 
 backend www-backend
     mode http
