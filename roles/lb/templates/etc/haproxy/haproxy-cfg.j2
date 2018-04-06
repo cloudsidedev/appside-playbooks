@@ -85,7 +85,7 @@ frontend www-frontend
     {{ conf_haproxy_www_acl }}
 {% endif %}
 
-{% if conf_haproxy_www_mode == "http" %}
+{% if conf_haproxy_www_ssl_request is not defined %}
 {% if conf_letsencrypt_enable is defined and conf_letsencrypt_enable == true %}
 {% if conf_haproxy_letsencrypt_backend is defined %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
@@ -111,7 +111,7 @@ frontend www-frontend
 
     default_backend {{ conf_haproxy_www_default_backend }}
 
-{% if conf_haproxy_www_mode == "tcp" %}
+{% if conf_haproxy_www_ssl_request is defined %}
 ###########
 # WWW-SSL #
 ###########
