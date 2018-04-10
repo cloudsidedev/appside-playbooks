@@ -148,6 +148,11 @@ conf_varnish_vcl_backend_response: |
   # make Varnish keep all objects for 6 hours beyond their TTL
   set beresp.grace = 6h;
   # set beresp.grace = 2m;
+conf_varnish_vcl_hash: |
+  # Hash cookies for requests that have them.
+  if (req.http.Cookie) {
+      hash_data(req.http.Cookie);
+  }
 
 #
 # rbenv
