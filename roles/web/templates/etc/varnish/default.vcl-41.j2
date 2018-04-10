@@ -56,10 +56,9 @@ sub vcl_hash {
       hash_data(server.ip);
   }
 
-  # Hash cookies for requests that have them.
-  if (req.http.Cookie) {
-      hash_data(req.http.Cookie);
-  }
+  {% if conf_varnish_vcl_hash is defined %}
+    {{ conf_varnish_vcl_hash }}
+  {% endif %}
 
   return (lookup);
 }
