@@ -36,6 +36,7 @@ conf_mysql_report_host: atlantis
 conf_mysql_replication: false
 conf_mysql_replication_settings:
 conf_mysql_server_id: 1
+conf_galera_cluster: false
 
 #
 # galeranotify
