@@ -32,6 +32,7 @@ conf_mysql_wait_timeout: 600
 conf_mysql_lower_case_table_names: 1
 conf_mysql_ft_boolean_syntax: ' |-><()~*:""&^'
 conf_mysql_tmpdir: /run/mysqld
+conf_mysql_replication: false
 
 #
 # galeranotify
