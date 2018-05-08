@@ -13,6 +13,7 @@ conf_mysql_key_buffer: 16M
 conf_mysql_clustercheck_user: clustercheck
 conf_mysql_clustercheck_password: clustercheck
 conf_mysql_clustercheck_available_when_donor: 0
+conf_mysql_innodb_log_file_size: 33554432
 
 #
 # galeranotify
