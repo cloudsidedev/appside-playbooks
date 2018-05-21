@@ -73,13 +73,13 @@
   tags: [ assh, assh-conf ]
 
 - name: provision ~/.ssh/assh.yml (root)
-  template: src=home/{{ item }}.j2 dest=~/{{ item }} mode=0644
+  template: src=home/{{ item }}.j2 dest=$HOME/{{ item }} mode=0644
   with_items:
     - .ssh/assh.yml
   tags: [ assh, assh-conf ]
 
 - name: provision ~/.ssh/assh.yml (home)
-  template: src=home/{{ item }}.j2 dest=~/{{ item }} mode=0644
+  template: src=home/{{ item }}.j2 dest=$HOME/{{ item }} mode=0644
   with_items:
     - .ssh/assh.yml
   become: false
