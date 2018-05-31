@@ -1,6 +1,6 @@
 ---
 
-# file: playbooks/vars/os/distribution/Ubuntu-xenial.yml
+# file: playbooks/vars/os/distribution/Ubuntu-bionic.yml
 
 var_package_php_apc: php-apcu
 var_package_git: git
