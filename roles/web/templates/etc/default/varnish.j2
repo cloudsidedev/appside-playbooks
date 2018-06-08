@@ -48,14 +48,20 @@ MEMLOCK=82000
 #
 # Listen on port 6081, administration on localhost:6082, and forward to
 # one content server selected by the vcl file, based on the request.
-#
+#   
+{% if conf_varnish_version is defined and conf_varnish_version != 3 %}
 DAEMON_OPTS="-a :{{ conf_varnish_listen_port }} \
              -T localhost:{{ conf_varnish_listen_admin_port }} \
              -f /etc/varnish/default.vcl \
              -S /etc/varnish/secret \
              -s {{ conf_varnish_storage_backend }} \
-             -p workspace_client={{ conf_varnish_parameter_workspace_client }}"
-
+             -p workspace_client={{ conf_varnish_parameter_workspace_client }}"{% else %}
+DAEMON_OPTS="-a :{{ conf_varnish_listen_port }} \
+             -T localhost:{{ conf_varnish_listen_admin_port }} \
+             -f /etc/varnish/default.vcl \
+             -S /etc/varnish/secret \
+             -s {{ conf_varnish_storage_backend }}"
+{% endif %}
 
 ## Alternative 3, Advanced configuration
 #
