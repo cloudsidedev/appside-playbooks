@@ -68,7 +68,49 @@
     - libimage-exiftool-perl
     # - varnish
     - memcached
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian" and ansible_lsb.major_release|int < 18
+  ignore_errors: yes
+  tags: [ php, apache2 ]
+
+- name: be sure web packages packages are installed (Debian family, >= 18)
+  apt: pkg={{ item }} state=latest force=yes
+  with_items:
+    - apache2
+    - libapache2-mod-php{{ conf_php_version_debian_family }}
+    - libapache2-mod-rpaf
+    - apachetop
+    - php{{ conf_php_version_debian_family }}
+    - php{{ conf_php_version_debian_family }}-cli
+    - php{{ conf_php_version_debian_family }}-gd
+    - php{{ conf_php_version_debian_family }}-json
+    - php{{ conf_php_version_debian_family }}-mysql
+    - php{{ conf_php_version_debian_family }}-tidy
+    - php{{ conf_php_version_debian_family }}-curl
+    - php{{ conf_php_version_debian_family }}-gd
+    - php{{ conf_php_version_debian_family }}-imagick
+    - php{{ conf_php_version_debian_family }}-imap
+    - php{{ conf_php_version_debian_family }}-intl
+    - php{{ conf_php_version_debian_family }}-ldap
+    # - php{{ conf_php_version_debian_family }}-mcrypt
+    - php{{ conf_php_version_debian_family }}-gettext
+    - php{{ conf_php_version_debian_family }}-xml
+    - php{{ conf_php_version_debian_family }}-mbstring
+    - php{{ conf_php_version_debian_family }}-soap
+    - php{{ conf_php_version_debian_family }}-zip
+    - php{{ conf_php_version_debian_family }}-sqlite3
+    # - php5-common
+    - php-memcached
+    - php-db
+    - php-mdb2
+    - php-pear
+    - imagemagick
+    - gifsicle
+    - optipng
+    - libjpeg-progs
+    - libimage-exiftool-perl
+    # - varnish
+    - memcached
+  when: ansible_os_family == "Debian" and ansible_lsb.major_release|int >= 18
   ignore_errors: yes
   tags: [ php, apache2 ]
 
