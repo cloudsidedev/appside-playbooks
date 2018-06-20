@@ -91,14 +91,14 @@ frontend www-frontend
 {% if conf_letsencrypt_enable is defined and conf_letsencrypt_enable == true %}
 {% if conf_haproxy_letsencrypt_backend is defined %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs no-sslv3 ciphers EECDH+AESGCM:EDH+AESGCM:EECDH+AES256:EDH+AES256:EECDH+AES128:EDH+AES:RSA+AESGCM:RSA+AES:!aNULL:!eNULL:!LOW:!EXPORT:!MEDIUM:!MD5:!PSK:!RSAPSK:!SRP:!DSS:!CAMELLIA:!RC4:!3DES
+    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs
 {% endif %}
 {% else %}
 {% if conf_haproxy_disable_ssl is defined and conf_haproxy_disable_ssl == true %}
     # SSL disabled by conf_haproxy_disable_ssl: true
 {% else %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/ no-sslv3 ciphers EECDH+AESGCM:EDH+AESGCM:EECDH+AES256:EDH+AES256:EECDH+AES128:EDH+AES:RSA+AESGCM:RSA+AES:!aNULL:!eNULL:!LOW:!EXPORT:!MEDIUM:!MD5:!PSK:!RSAPSK:!SRP:!DSS:!CAMELLIA:!RC4:!3DES
+    bind :443 ssl crt /etc/certs/
 {% endif %}
 {% endif %}
 {% endif %}
@@ -156,14 +156,14 @@ frontend www-ssl-frontend
 {% if conf_letsencrypt_enable is defined and conf_letsencrypt_enable == true %}
 {% if conf_haproxy_letsencrypt_backend is defined %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs no-sslv3 ciphers EECDH+AESGCM:EDH+AESGCM:EECDH+AES256:EDH+AES256:EECDH+AES128:EDH+AES:RSA+AESGCM:RSA+AES:!aNULL:!eNULL:!LOW:!EXPORT:!MEDIUM:!MD5:!PSK:!RSAPSK:!SRP:!DSS:!CAMELLIA:!RC4:!3DES
+    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs
 {% endif %}
 {% else %}
 {% if conf_haproxy_disable_ssl is defined and conf_haproxy_disable_ssl == true %}
     # SSL disabled by conf_haproxy_disable_ssl: true
 {% else %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/ no-sslv3 ciphers EECDH+AESGCM:EDH+AESGCM:EECDH+AES256:EDH+AES256:EECDH+AES128:EDH+AES:RSA+AESGCM:RSA+AES:!aNULL:!eNULL:!LOW:!EXPORT:!MEDIUM:!MD5:!PSK:!RSAPSK:!SRP:!DSS:!CAMELLIA:!RC4:!3DES
+    bind :443 ssl crt /etc/certs/
 {% endif %}
 {% endif %}
 
@@ -181,7 +181,7 @@ backend www-backend
     mode http
     balance {{ conf_haproxy_www_backend_balance }}
     # capture cookie vgnvisitor= len 32
-    cookie SERVERID insert indirect nocache
+    cookie SERVERID insert indirect nocache httponly secure
     # option forwardfor
     # option httpchk # THIS BREAKS GRACE
     # option httpclose
