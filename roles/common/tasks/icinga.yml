@@ -58,6 +58,7 @@
   when:
       - ansible_distribution == "Ubuntu"
       - conf_icinga_master == true or conf_icinga_satellite == true or conf_icinga_client == true
+  ignore_errors: yes
   tags: [ icinga, icinga-conf ]
 
 #
