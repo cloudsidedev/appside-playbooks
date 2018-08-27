@@ -53,19 +53,19 @@
 
 - name: Docker apt-key (Debian family)
   apt_key: id="58118E89F3A912897C070ADBF76221572C52609D" keyserver="hkp://p80.pool.sks-keyservers.net:80" state=present
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian" and ansible_lsb.major_release|int < 18
   register: add_repository_key
   ignore_errors: yes
   tags: [ docker ]
 
 - name: Docker apt-key (Debian family) | Alternative
   shell: "curl -sSL {{ apt_key_url }} | sudo apt-key add -"
-  when: add_repository_key|failed
+  when: ansible_os_family == "Debian" and ansible_lsb.major_release|int < 18
   tags: [ docker ]
 
 - name: docker repo (Debian family)
   apt_repository: repo="deb https://apt.dockerproject.org/repo {{ ansible_lsb.id|lower }}-{{ ansible_lsb.codename|lower }} main" update_cache=yes
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian" and ansible_lsb.major_release|int < 18
   tags: [ docker ]
 
 - name: docker packages (Debian family)
@@ -73,7 +73,16 @@
   with_items:
     - docker-engine
   when:
-    - ansible_os_family == "Debian"
+    - ansible_os_family == "Debian" and ansible_lsb.major_release|int < 18
+  ignore_errors: true
+  tags: [ docker ]
+
+- name: docker.io packages (Debian family, >= 18.04)
+  apt: pkg={{ item }} update_cache=yes state=latest
+  with_items:
+    - docker.io
+  when:
+    - ansible_os_family == "Debian" and ansible_lsb.major_release|int >= 18
   ignore_errors: true
   tags: [ docker ]
 
@@ -149,6 +158,7 @@
     restart_policy: "{{ item.value.restart_policy }}"
     hostname: "{{ item.value.hostname|default(None) }}"
     user: "{{ item.value.user|default(None) }}"
+    privileged : "{{ item.value.privileged|default('no') }}"
     exposed_ports: "{{ item.value.exposed_ports|default([]) }}"
     published_ports: "{{ item.value.published_ports|default([]) }}"
     volumes: "{{ item.value.volumes|default([]) }}"
@@ -172,6 +182,7 @@
     restart_policy: "{{ item.value.restart_policy }}"
     hostname: "{{ item.value.hostname|default(None) }}"
     user: "{{ item.value.user|default(None) }}"
+    privileged : "{{ item.value.privileged|default('no') }}"
     exposed_ports: "{{ item.value.exposed_ports|default([]) }}"
     published_ports: "{{ item.value.published_ports|default([]) }}"
     volumes: "{{ item.value.volumes|default([]) }}"
@@ -196,6 +207,7 @@
     restart_policy: "{{ item.value.restart_policy }}"
     hostname: "{{ item.value.hostname|default(None) }}"
     user: "{{ item.value.user|default(None) }}"
+    privileged : "{{ item.value.privileged|default('no') }}"
     exposed_ports: "{{ item.value.exposed_ports|default([]) }}"
     published_ports: "{{ item.value.published_ports|default([]) }}"
     volumes: "{{ item.value.volumes|default([]) }}"
