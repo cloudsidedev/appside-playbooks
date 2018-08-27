@@ -230,3 +230,72 @@
   when: item.value.state == "enabled" and item.value.type == "woodwing" and conf_web_cron_enable is defined and conf_web_cron_enable == true
   with_dict: '{{ conf_vhosts_common }}'
   tags: [ woodwing, woodwing-conf ]
+
+- name: set timestamps on BrandLogonManager so they match smart_serverplugins
+  shell: sudo touch -a -m -t {{ conf_brandlogonmanager_timestamp }} /var/www/vhosts/{{ item.key }}/enterprise/server/plugins/BrandLogonManager/*
+  with_dict: '{{ conf_vhosts_common }}'
+  when: item.value.state == "enabled" and item.value.type == "woodwing"
+  tags: [ woodwing, woodwing-conf, woodwing-plugins ]
+
+#
+# content station + plugin
+#
+- name: create contentstation tmp-directory
+  file: path=/tmp/cs state=directory mode=0755
+  tags: [ woodwing, contentstation ]
+
+- name: download and unzip contentstation
+  unarchive:
+    src:  "{{ conf_contentstation_download_url }}"
+    dest: /tmp/cs
+    remote_src: true
+  when: conf_contentstation_enable is defined and conf_contentstation_enable == true
+  tags: [ woodwing, contentstation ]
+
+- name: check if contentstation has been extracted
+  stat: path=/tmp/cs/contentstation/config.js
+  register: ContentStation
+  when: conf_woodwing_enable is defined and conf_woodwing_enable == true
+  tags: [ woodwing, contentstation ]
+
+- name: rsync contentstation
+  shell: rsync -a /tmp/cs/ /var/www/vhosts/{{ item.key }}/{{ conf_contentstation_path }}
+  with_dict: '{{ conf_vhosts_common }}'
+  delegate_to: "{{ inventory_hostname }}"
+  when: item.value.state == "enabled" and item.value.type == "woodwing"
+  tags: [ woodwing, contentstation ]
+
+- name: remove contentstation tmp-directory
+  file: path=/tmp/cs state=absent mode=0750
+  when: conf_contentstation_enable is defined and conf_contentstation_enable == true
+  tags: [ woodwing, contentstation ]
+
+- name: create contentstation-plugin tmp-directory
+  file: path=/tmp/csp state=directory mode=0755
+  tags: [ woodwing, contentstation, contentstationplugin ]
+
+- name: download and unzip contentstationplugin
+  unarchive:
+    src:  "{{ conf_contentstation_plugin_download_url }}"
+    dest: /tmp/csp
+    remote_src: true
+  when: conf_contentstation_enable is defined and conf_contentstation_enable == true
+  tags: [ woodwing, contentstation, contentstationplugin ]
+
+- name: check if contentStation plugin has been extracted
+  stat: path=/tmp/csp/ContentStation/config.php
+  register: ContentStationPlugin
+  when: conf_woodwing_enable is defined and conf_woodwing_enable == true
+  tags: [ woodwing, contentstation, contentstationplugin ]
+
+- name: rsync contentstationplugin
+  shell: rsync -a /tmp/csp/ /var/www/vhosts/{{ item.key }}/{{ conf_contentstation_plugin_path }}
+  with_dict: '{{ conf_vhosts_common }}'
+  delegate_to: "{{ inventory_hostname }}"
+  when: item.value.state == "enabled" and item.value.type == "woodwing"
+  tags: [ woodwing, contentstation, contentstationplugin ]
+
+- name: remove contentstation-plugin tmp-directory
+  file: path=/tmp/csp state=absent mode=0750
+  when: conf_contentstation_enable is defined and conf_contentstation_enable == true
+  tags: [ woodwing, contentstation, contentstationplugin ]
