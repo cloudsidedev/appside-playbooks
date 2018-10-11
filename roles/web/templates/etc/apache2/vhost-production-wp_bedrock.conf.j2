@@ -2,7 +2,11 @@
 # --- THIS FILE IS AUTOMATICALLY PROVISIONED THROUGH ANSIBLE ---
 #
 
+{% if item.value.virtualhost is defined %}
+<VirtualHost {{ item.value.virtualhost }}>
+{% else %}
 <VirtualHost *:8080>
+{% endif %}
 
         ServerName {{ item.value.servername }}
 {% if item.value.serveralias.0 is defined %}

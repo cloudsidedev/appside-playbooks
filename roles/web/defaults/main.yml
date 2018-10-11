@@ -32,6 +32,20 @@ conf_mogilefs_storage_path: /data/mogilefs
 conf_ruby_version_debian_family: 2.4
 
 #
+# Apache2
+#
+conf_mod_pagespeed: false
+conf_apache_welcome: 'echo "Hello, World! I am a web server configured using <a href=\"https://github.com/ttssdev/appflow/\">AppFlow</a> running on: "; echo exec("hostname");'
+conf_apache2_listen: |
+  # NameVirtualHost *:8080
+  Listen 8080
+conf_apache2_StartServers: 5
+conf_apache2_MinSpareServers: 5
+conf_apache2_MaxSpareServers: 10
+conf_apache2_MaxClients: 150
+conf_apache2_MaxRequestsPerChild: 0
+
+#
 # nginx
 #
 conf_nginx_enable: false
