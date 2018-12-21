@@ -59,6 +59,8 @@ frontend www-frontend
 
 {% if conf_haproxy_www_mode == "http" %}
     option httplog
+    reqidel ^X-Forwarded-.*:.*
+    reqidel ^X-Host.*:.*
     option forwardfor
     option http-server-close
     http-response set-header Referrer-Policy "strict-origin-when-cross-origin"
