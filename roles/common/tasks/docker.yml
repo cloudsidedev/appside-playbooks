@@ -103,14 +103,14 @@
   notify: handle_restart_docker
   tags: [ docker, docker-conf ]
 
-- name: provision service (Debian family)
-  template: src=lib/{{ item }}.j2 dest=/lib/{{ item }} owner=root group={{ conf_root_group }} mode=0644
-  with_items:
-      - systemd/system/docker.service
-  when:
-    - ansible_os_family == "Debian"
-  notify: handle_restart_docker
-  tags: [ docker, docker-conf ]
+# - name: provision service (Debian family)
+#   template: src=lib/{{ item }}.j2 dest=/lib/{{ item }} owner=root group={{ conf_root_group }} mode=0644
+#   with_items:
+#       - systemd/system/docker.service
+#   when:
+#     - ansible_os_family == "Debian"
+#   notify: handle_restart_docker
+#   tags: [ docker, docker-conf ]
 
 # - name: install docker-compose
 #   get_url: url={{ conf_docker_compose_url }} dest=/usr/local/bin/docker-compose force=yes
@@ -162,6 +162,7 @@
     exposed_ports: "{{ item.value.exposed_ports|default([]) }}"
     published_ports: "{{ item.value.published_ports|default([]) }}"
     volumes: "{{ item.value.volumes|default([]) }}"
+    network_mode: "{{ item.value.network_mode|default('bridge') }}"
     networks: "{{ item.value.networks|default([]) }}"
     links: "{{ item.value.links|default([]) }}"
     # entrypoint: "{{ item.value.entrypoint }}"
@@ -222,3 +223,27 @@
   when: item.value.entrypoint is defined and item.value.command is defined
   ignore_errors: yes
   tags: [ docker, docker-conf, docker-containers ]
+
+#
+# sudo apt install python3-docker
+# sudo apt install python-docker
+# sudo pip install --upgrade docker-compose
+# sudo pip3 install --upgrade docker-compose
+#
+- name: provision docker services
+  docker_service:
+    project_name: "{{ item.value.project_name|default(item.key) }}"
+    state: "{{ item.value.state }}"
+    definition: "{{ item.value.definition|from_yaml }}"
+  with_dict: '{{ conf_docker_services }}'
+  ignore_errors: yes
+  tags: [ docker, docker-conf, docker-services ]
+
+# - name: provision docker stacks
+#   docker_stack:
+#     name: "{{ item.value.name|default(item.key) }}"
+#     state: "{{ item.value.state }}"
+#     compose_yaml: "{{ item.value.compose_yaml }}"
+#   with_dict: '{{ conf_docker_stacks }}'
+#   ignore_errors: yes
+#   tags: [ docker, docker-conf, docker-stacks ]
