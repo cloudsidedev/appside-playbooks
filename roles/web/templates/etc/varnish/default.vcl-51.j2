@@ -149,14 +149,6 @@ sub vcl_recv {
       return (hash);
   }
 
-  # WP cookies: https://www.varnish-software.com/wiki/content/tutorials/wordpress/wp_step_by_step.html#ignore-cookies
-  set req.http.cookie = regsuball(req.http.cookie, "wp-settings-\d+=[^;]+(; )?", "");
-  set req.http.cookie = regsuball(req.http.cookie, "wp-settings-time-\d+=[^;]+(; )?", "");
-  set req.http.cookie = regsuball(req.http.cookie, "wordpress_test_cookie=[^;]+(; )?", "");
-  if (req.http.cookie == "") {
-    unset req.http.cookie;
-  }
-
 {% if conf_varnish_vcl_recv is defined %}
   {{ conf_varnish_vcl_recv }}
 {% endif %}
