@@ -4,3 +4,8 @@
 
 var_package_php_apc: php-apcu
 var_package_git: git
+
+#
+# PHP
+#
+conf_php_version_debian_family: 7.2

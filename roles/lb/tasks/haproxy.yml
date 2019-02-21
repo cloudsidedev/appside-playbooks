@@ -42,7 +42,7 @@
 
 - name: enable repo ppa:vbernat/haproxy-1.6 (Ubuntu)
   apt_repository: repo='deb http://ppa.launchpad.net/vbernat/haproxy-1.6/ubuntu {{ ansible_distribution_release }} main' update_cache=yes
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_distribution == "Ubuntu" and ansible_lsb.major_release|int < 18
   tags: [ haproxy, ssl ]
 
 - name: be sure latest haproxy packages are installed (Ubuntu)

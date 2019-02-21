@@ -4,7 +4,7 @@
 
 - name: enable repo ppa:keepalived/stable (Ubuntu)
   apt_repository: repo='ppa:keepalived/stable' update_cache=yes state=present
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_distribution == "Ubuntu" and ansible_lsb.major_release|int < 18
   tags: [ haproxy, keepalived ]
 
 - name: be sure keepalived packages are installed

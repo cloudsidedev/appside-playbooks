@@ -18,12 +18,14 @@
 - name: install golang ppa (Debian Family)
   # apt_repository: repo='ppa:ubuntu-lxc/lxd-stable' update_cache=yes
   apt_repository: repo='ppa:jonathonf/golang' update_cache=yes
+  ignore_errors: yes
   when: ansible_distribution == "Ubuntu" and ansible_lsb.major_release|int < 18
   tags: [ common, golang ]
 
 - name: base packages (Debian family)
   apt: pkg={{ item }} update_cache=yes state=latest
   with_items: '{{ conf_base_packages }}'
+  ignore_errors: yes
   when: ansible_os_family == "Debian"
 
 - name: python3-pip (Ubuntu >= 14 or Debian >= 7)

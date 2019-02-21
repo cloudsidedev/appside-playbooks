@@ -18,20 +18,21 @@
   apt_key:
     url: https://packagecloud.io/varnishcache/varnish{{ conf_varnish_version }}/gpgkey
     state: present
-  when: ansible_os_family == "Debian" and conf_varnish_version != 3
+  when: ansible_os_family == "Debian" and conf_varnish_version != 3 and ansible_lsb.major_release|int < 18
+
   tags: [ varnish, apache2 ]
 
 - name: varnish repo (Debian family)
   apt_repository: repo='deb https://packagecloud.io/varnishcache/varnish{{ conf_varnish_version }}/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} main' state=present update_cache=yes
-  when: ansible_distribution == "Ubuntu" and conf_varnish_version != 3
+  when: ansible_distribution == "Ubuntu" and conf_varnish_version != 3 and ansible_lsb.major_release|int < 18
   ignore_errors: yes
   tags: [ varnish, apache2 ]
 
-- name: varnish repo src (Debian family)
-  apt_repository: repo='deb-src https://packagecloud.io/varnishcache/varnish{{ conf_varnish_version }}/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} main' state=present update_cache=yes
-  when: ansible_distribution == "Ubuntu" and conf_varnish_version != 3
-  ignore_errors: yes
-  tags: [ varnish, apache2 ]
+# - name: varnish repo src (Debian family)
+#   apt_repository: repo='deb-src https://packagecloud.io/varnishcache/varnish{{ conf_varnish_version }}/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} main' state=present update_cache=yes
+#   when: ansible_distribution == "Ubuntu" and conf_varnish_version != 3 and ansible_lsb.major_release|int < 18
+#   ignore_errors: yes
+#   tags: [ varnish, apache2 ]
 
 - name: be sure varnish package is installed (Debian family)
   apt: pkg={{ item }} state=latest force=yes
