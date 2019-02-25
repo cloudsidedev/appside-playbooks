@@ -89,7 +89,7 @@
 - name: provision /etc/apparmor.d/usr.sbin.mysqld
   template: src=etc/apparmor.d/usr.sbin.mysqld.j2 dest=/etc/apparmor.d/usr.sbin.mysqld owner=root group={{ conf_root_group }} mode=0644
   notify: handle_reload_apparmor_mysql
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian" and ansible_lsb.major_release|int < 18
   tags: [ mysql, mysql-conf, percona ]
 
 - meta: flush_handlers
