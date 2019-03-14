@@ -1,6 +1,7 @@
 ---
 
 # file: playbooks/roles/common/tasks/base_packages.yml
+#
 
 - name: apt-mark hold (Debian family)
   shell: "apt-mark hold {{ item }}"
@@ -10,45 +11,38 @@
   tags: [ hold ]
 
 - name: purge unwanted packages (Debian family)
-  apt: pkg={{ item }} state=absent purge=yes
-  with_items: '{{ conf_unwanted_packages }}'
+  apt: pkg={{ conf_unwanted_packages }} state=absent purge=yes
   ignore_errors: yes
   when: ansible_os_family == "Debian"
 
-- name: install golang ppa (Debian Family)
-  # apt_repository: repo='ppa:ubuntu-lxc/lxd-stable' update_cache=yes
-  apt_repository: repo='ppa:jonathonf/golang' update_cache=yes
-  ignore_errors: yes
-  when: ansible_distribution == "Ubuntu" and ansible_lsb.major_release|int < 18
-  tags: [ common, golang ]
+  # - name: install golang ppa (Debian Family)
+  # # apt_repository: repo='ppa:ubuntu-lxc/lxd-stable' update_cache=yes
+  # apt_repository: repo='ppa:jonathonf/golang' update_cache=yes
+  # ignore_errors: yes
+  # when: ansible_distribution == "Ubuntu" and ansible_lsb.major_release|int < 18
+  # tags: [ common, golang ]
 
 - name: base packages (Debian family)
-  apt: pkg={{ item }} update_cache=yes state=latest
-  with_items: '{{ conf_base_packages }}'
+  apt: pkg={{ conf_base_packages }} update_cache=yes state=latest
   ignore_errors: yes
   when: ansible_os_family == "Debian"
 
 - name: python3-pip (Ubuntu >= 14 or Debian >= 7)
-  apt: pkg={{ item }} state=installed
-  with_items:
-    - python3-pip
+  apt: pkg=python3-pip state=present
   when: (ansible_distribution == "Ubuntu" and ansible_lsb.major_release|int >= 14) or
         (ansible_distribution == "Debian" and ansible_lsb.major_release|int >= 7)
 
 - name: base packages (RedHat/SHMZ family)
-  package: name={{ item }} state=latest
-  with_items: '{{ conf_base_packages }}'
+  package: name={{ conf_base_packages }} state=latest
   when: ansible_os_family == "RedHat" or ansible_os_family == "SHMZ"
 
 - name: base packages (FreeBSD)
-  pkgng: name={{ item }} state=present cached=yes
-  with_items: '{{ conf_base_packages }}'
+  pkgng: name={{ conf_base_packages }} state=present cached=yes
   when: ansible_distribution == "FreeBSD"
   tags: [ common, pkg, base_packages ]
 
 - name: custom base packages (Debian family)
-  apt: pkg={{ item }} update_cache=yes state=latest
-  with_items: '{{ conf_base_packages_custom }}'
+  apt: pkg={{ conf_base_packages_custom }} update_cache=yes state=latest
   when: conf_base_packages_custom is defined and ansible_os_family == "Debian"
   tags: [ common, pkg, base_packages ]
 
@@ -57,7 +51,8 @@
   when: ansible_distribution == "FreeBSD"
   tags: [ common, pkg, base_packages ]
 
-- name: symlink go
-  file: src=/usr/lib/go-1.8/bin/go dest=/usr/local/bin/go state=link
-  when: ansible_distribution == "Ubuntu"
-  tags: [ common, golang ]
+  # - name: symlink go
+  # file: src=/usr/lib/go-1.8/bin/go dest=/usr/local/bin/go state=link
+  # when: ansible_distribution == "Ubuntu"
+  # tags: [ common, golang ]
+

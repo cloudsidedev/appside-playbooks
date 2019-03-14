@@ -301,6 +301,7 @@
       - conf_icinga_master == true or conf_icinga_satellite == true or conf_icinga_client == true
   environment:
     DEBIAN_FRONTEND: noninteractive
+  ignore_errors: yes
   tags: [ icinga, icinga-conf ]
 
 - name: install third party nagios plugin dependencies (RedHat/SHMZ)
@@ -328,6 +329,7 @@
     - conf_icinga_master == true or conf_icinga_satellite == true or conf_icinga_client == true
   environment:
     DEBIAN_FRONTEND: noninteractive
+  ignore_errors: yes
   tags: [ icinga, icinga-conf ]
 
 - name: deploy third party nagios plugins
