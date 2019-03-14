@@ -53,6 +53,22 @@ conf_sysctl_dict:
   # - { k: net.core.netdev_max_backlog   , v: 16384 }
 
 #
+# swapfile
+#
+conf_swapfile_enable: false
+conf_swapfile_size: "{{ ((ansible_memtotal_mb | int * 2)
+                    if (ansible_memtotal_mb | int <= 2048)
+                    else '512') }}"
+conf_swapfile_fallocate: true
+conf_swapfile_path: "/swapfile-{{ conf_swapfile_size }}"
+conf_swapfile_swappiness: 60
+conf_swapfile_vfs_cache_pressure: 100
+conf_swapfile_sysctl:
+  "vm.swappiness": "{{ conf_swapfile_swappiness }}"
+  "vm.vfs_cache_pressure": "{{ conf_swapfile_vfs_cache_pressure }}"
+conf_swapfile_delete: false
+
+#
 # ACL
 #
 conf_acl_enable: false

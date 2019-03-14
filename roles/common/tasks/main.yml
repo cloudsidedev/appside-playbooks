@@ -75,6 +75,10 @@
   when: conf_acl_enable is defined and conf_acl_enable == true
   tags: [ common, acl, acl-conf ]
 
+- import_tasks: swapfile.yml
+  when: conf_swapfile_enable is defined and conf_swapfile_enable == true
+  tags: [ common, swapfile, swapfile-conf ]
+
 - import_tasks: supervisor.yml
   when: conf_supervisor_enable is defined and conf_supervisor_enable == true
   tags: [ common, supervisor, supervisor-conf ]

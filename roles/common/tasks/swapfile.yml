@@ -1,0 +1,83 @@
+---
+
+# file: playbooks/roles/common/tasks/swap.yml
+
+- name: Configure swap file swappiness and cache pressure
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: "present"
+    reload: True
+  with_dict: "{{ conf_swapfile_sysctl }}"
+
+- name: Disable swap file
+  shell: test -f {{ conf_swapfile_path }} && swapoff {{ conf_swapfile_path }} || true
+  changed_when: False
+  when: conf_swapfile_delete
+
+- name: Create swap file
+  command: |
+    {% if conf_swapfile_fallocate %}
+    fallocate -l {{ ((conf_swapfile_size) | int * 1024 * 1024) }} {{ conf_swapfile_path }}
+    {% else %}
+    dd if=/dev/zero of={{ conf_swapfile_path }} bs=1M count={{ conf_swapfile_size }}
+    {% endif %}
+  args:
+    creates: "{{ conf_swapfile_path }}"
+  register: conf_swapfile_register_create
+  when: not conf_swapfile_delete
+
+- name: Set swap file permissions
+  file:
+    path: "{{ conf_swapfile_path }}"
+    state: "file"
+    owner: "root"
+    group: "root"
+    mode: "0600"
+  when: (not conf_swapfile_delete and not ansible_check_mode)
+
+- name: Initialize swap file
+  command: mkswap {{ conf_swapfile_path }}
+  when: (conf_swapfile_register_create is changed and not conf_swapfile_delete)
+
+- name: Enable swap file
+  command: swapon {{ conf_swapfile_path }}
+  when: (conf_swapfile_register_create is changed and not conf_swapfile_delete)
+
+- name: Manage swap file in /etc/fstab
+  mount:
+    src: "{{ conf_swapfile_path }}"
+    name: "none"
+    fstype: "swap"
+    opts: "sw,nofail"
+    dump: "0"
+    passno: "0"
+    state: "{{ 'absent' if conf_swapfile_delete else 'present' }}"
+
+- name: Remove swap file
+  file:
+    path: "{{ conf_swapfile_path }}"
+    state: "absent"
+  when: conf_swapfile_delete
+
+# - name: be sure acl package is installed (Debian family)
+#   apt: pkg={{ item }} state=installed
+#   with_items:
+#     - acl
+#   when: ansible_os_family == "Debian"
+#   tags: [ acl ]
+
+# - name: set ACLs
+#   acl:
+#     default: "{{ item.default }}"
+#     entity: "{{ item.entity }}"
+#     etype: "{{ item.etype }}"
+#     follow: "{{ item.follow }}"
+#     path: "{{ item.path }}"
+#     permissions: "{{ item.permissions }}"
+#     recursive: "{{ item.recursive }}"
+#     state: "{{ item.state }}"
+#   with_items:
+#     - "{{ conf_acl }}"
+#   when: conf_acl_enable is defined and conf_acl_enable == true and item.state|default('present') != 'absent'
+#   tags: [ acl, acl-conf ]
