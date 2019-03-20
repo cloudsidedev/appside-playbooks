@@ -14,7 +14,11 @@ source_directories: {{ conf_backup_source_directories }}
 # remote_path: borg1
 
 # Path to local or remote repository.
+{% if conf_backup_user is defined and conf_backup_host is defined %}
 repository: {{ conf_backup_user }}@{{ conf_backup_host }}:{{ conf_backup_repo }}
+{% else %}
+repository: {{ conf_backup_repo }}
+{% endif %}
 
 [storage]
 # Passphrase to unlock the encryption key with. Only use on repositories that

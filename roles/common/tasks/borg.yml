@@ -116,9 +116,7 @@
   tags: [ borg ]
 
 - name: install borgbackup (Debian family)
-  apt: pkg={{ item }} state=latest
-  with_items:
-    - borgbackup
+  apt: pkg=borgbackup state=latest
   environment:
     DEBIAN_FRONTEND: noninteractive
   when: ansible_os_family == "Debian"
@@ -136,12 +134,12 @@
 
 - name: deploy /etc/borgmatic/id_rsa-backup
   copy: content="{{ conf_users.backup.private_key }}" dest=/etc/borgmatic/id_rsa-backup owner=root group=adm mode=600 backup=yes
-  when: conf_backup_client == true
+  when: conf_backup_client == true and conf_backup_user is defined and conf_backup_host is defined
   tags: [ borg, borgmatic ]
 
 - name: create /root/.ssh
   file: path=/root/.ssh state=directory owner=root group={{ conf_root_group }} mode=0700
-  when: conf_backup_client == true
+  when: conf_backup_client == true and conf_backup_user is defined and conf_backup_host is defined
   tags: [ borg, borgmatic ]
 
 # - name: deploy /root/.ssh/config
@@ -151,7 +149,7 @@
 
 - name: deploy /root/.ssh/assh_personal.yml
   template: src=root/.ssh/assh_personal.yml.j2 dest=/root/.ssh/assh_personal.yml owner=root group={{ conf_root_group }} mode=0600
-  when: conf_backup_client == true and conf_backup_deploy_ssh_config == true
+  when: conf_backup_client == true and conf_backup_deploy_ssh_config is defined and conf_backup_deploy_ssh_config == true and conf_backup_user is defined and conf_backup_host is defined
   notify: handle_assh_configbuild
   tags: [ borg, borgmatic ]
 
@@ -165,14 +163,32 @@
   ignore_errors: yes
   register: borg_repo_check_res
   failed_when: borg_repo_check_res.rc != 0
-  when: conf_backup_client == true
+  when: conf_backup_client == true and conf_backup_user is defined and conf_backup_host is defined
+  tags: [ borg ]
+
+#
+# Check if local repo exists, if not create
+#
+- name: check if local borg repo exists
+  shell: "export BORG_PASSPHRASE='{{ conf_backup_passphrase }}' ; borg list {{ conf_backup_repo }}"
+  ignore_errors: yes
+  register: borg_repo_check_res
+  failed_when: borg_repo_check_res.rc != 0
+  when: conf_backup_client == true and conf_backup_user is not defined and conf_backup_host is not defined
   tags: [ borg ]
 
 # sudo su - borg -c "ssh backup@node.foo.org"
 - name: init remote borg repo
   # shell: "export BORG_PASSPHRASE='{{ conf_backup_passphrase }}' ; borg init {{ conf_backup_user }}@{{ conf_backup_host }}:{{ conf_backup_repo }}"
   shell: "export BORG_PASSPHRASE='{{ conf_backup_passphrase }}' ; borg init --encryption=repokey-blake2 {{ conf_backup_user }}@{{ conf_backup_host }}:{{ conf_backup_repo }}"
-  when: borg_repo_check_res.rc != 0
+  when: borg_repo_check_res.rc != 0 and conf_backup_user is defined and conf_backup_host is defined
+  tags: [ borg ]
+
+# sudo su - borg -c "ssh backup@node.foo.org"
+- name: init local borg repo
+  # shell: "export BORG_PASSPHRASE='{{ conf_backup_passphrase }}' ; borg init {{ conf_backup_user }}@{{ conf_backup_host }}:{{ conf_backup_repo }}"
+  shell: "export BORG_PASSPHRASE='{{ conf_backup_passphrase }}' ; borg init --encryption=repokey-blake2 {{ conf_backup_repo }}"
+  when: borg_repo_check_res.rc != 0 and conf_backup_user is not defined and conf_backup_host is not defined
   tags: [ borg ]
 
 #
@@ -181,12 +197,17 @@
 
 - name: deploy /etc/borgmatic/config
   template: src=etc/borgmatic/config.j2 dest=/etc/borgmatic/config owner=root group={{ conf_root_group }} mode=0644
-  when: conf_backup_client == true
+  when: conf_backup_client == true and conf_backup_config is not defined
   tags: [ borg, borgmatic ]
 
 - name: deploy /etc/borgmatic/excludes
   template: src=etc/borgmatic/excludes.j2 dest=/etc/borgmatic/excludes owner=root group={{ conf_root_group }} mode=0644
-  when: conf_backup_client == true and conf_backup_exclude_directories is defined
+  when: conf_backup_client == true and conf_backup_exclude_directories is defined and conf_backup_config is not defined
+  tags: [ borg, borgmatic ]
+
+- name: deploy /etc/borgmatic/config.yaml
+  template: src=etc/borgmatic/config.yaml.j2 dest=/etc/borgmatic/config.yaml owner=root group={{ conf_root_group }} mode=0644
+  when: conf_backup_client == true and conf_backup_config is defined
   tags: [ borg, borgmatic ]
 
 - name: deploy /etc/cron.d/borgmatic
@@ -199,9 +220,7 @@
 # innobackupex --apply-log
 #
 - name: be sure percona-xtrabackup packages is installed (Debian family)
-  apt: pkg={{ item }} state=installed
-  with_items:
-    - percona-xtrabackup-24
+  apt: pkg=percona-xtrabackup-24 state=installed
   when: conf_backup_client == true and conf_backup_mysqldump == true and ansible_os_family == "Debian"
   tags: [ borg, borgmatic ]
 
@@ -230,17 +249,17 @@
 # elasticdump
 #
 - name: be sure nodejs packages packages are installed (Debian family)
-  apt: pkg={{ item }} state=installed force=yes
-  with_items:
-    - npm
+  apt: pkg=npm state=installed force=yes
   when: conf_backup_client == true and conf_backup_elasticdump == true and ansible_os_family == "Debian"
   tags: [ borg, borgmatic ]
 
 - name: be sure nodejs packages packages are installed (Debian family)
-  apt: pkg={{ item }} state=installed force=yes
-  with_items:
-    - nodejs
-    - nodejs-legacy
+  apt:
+    pkg:
+      - nodejs
+      - nodejs-legacy
+    state: installed
+    force: yes
   when: conf_backup_client == true and conf_backup_elasticdump == true and ansible_os_family == "Debian"
   tags: [ borg, borgmatic ]
 
