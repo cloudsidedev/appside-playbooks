@@ -84,7 +84,7 @@
   tags: [ common, supervisor, supervisor-conf ]
 
 - import_tasks: cron.yml
-  tags: [ common, cron ]
+  tags: [ common, cron, cron-conf ]
 
 - import_tasks: firewall.yml
   when: conf_firewall_enable is defined and conf_firewall_enable == true

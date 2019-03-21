@@ -7,3 +7,10 @@
   with_items:
       - usr/local/bin/cron-show.sh
   tags: [ cron ]
+
+- name: provision cron
+  cron:
+    "{{ item.value|from_yaml }}"
+  with_dict: '{{ conf_cron }}'
+  ignore_errors: yes
+  tags: [ cron, cron-conf ]
