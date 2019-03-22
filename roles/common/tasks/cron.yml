@@ -12,5 +12,6 @@
   cron:
     "{{ item.value|from_yaml }}"
   with_dict: '{{ conf_cron }}'
+  when: conf_cron is defined
   ignore_errors: yes
   tags: [ cron, cron-conf ]
