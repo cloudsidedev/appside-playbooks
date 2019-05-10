@@ -94,14 +94,14 @@ frontend www-frontend
 {% if conf_letsencrypt_enable is defined and conf_letsencrypt_enable == true %}
 {% if conf_haproxy_letsencrypt_backend is defined %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs {{ conf_haproxy_alpn }}
+    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs {{ conf_haproxy_alpn }} {{ conf_haproxy_curves }}
 {% endif %}
 {% else %}
 {% if conf_haproxy_disable_ssl is defined and conf_haproxy_disable_ssl == true %}
     # SSL disabled by conf_haproxy_disable_ssl: true
 {% else %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/ {{ conf_haproxy_alpn }}
+    bind :443 ssl crt /etc/certs/ {{ conf_haproxy_alpn }} {{ conf_haproxy_curves }}
 {% endif %}
 {% endif %}
 {% endif %}
@@ -159,14 +159,14 @@ frontend www-ssl-frontend
 {% if conf_letsencrypt_enable is defined and conf_letsencrypt_enable == true %}
 {% if conf_haproxy_letsencrypt_backend is defined %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs {{ conf_haproxy_alpn }}
+    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs {{ conf_haproxy_alpn }} {{ conf_haproxy_curves }}
 {% endif %}
 {% else %}
 {% if conf_haproxy_disable_ssl is defined and conf_haproxy_disable_ssl == true %}
     # SSL disabled by conf_haproxy_disable_ssl: true
 {% else %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/ {{ conf_haproxy_alpn }}
+    bind :443 ssl crt /etc/certs/ {{ conf_haproxy_alpn }} {{ conf_haproxy_curves }}
 {% endif %}
 {% endif %}
 
