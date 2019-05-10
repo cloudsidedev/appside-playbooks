@@ -12,6 +12,7 @@ conf_lbtier_enable: false
 #
 conf_haproxy_www_mode: "http"
 conf_haproxy_www_ssl_mode: "http"
+conf_haproxy_alpn: ""
 
 #
 # etcd

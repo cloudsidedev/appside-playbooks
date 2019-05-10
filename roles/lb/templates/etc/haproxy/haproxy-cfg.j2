@@ -22,7 +22,8 @@ global
     # For more information, see ciphers(1SSL). This list is from:
     #  https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
     # ssl-default-bind-ciphers EECDH+AESGCM:EDH+AESGCM:EECDH+AES256:EDH+AES256:EECDH+AES128:EDH+AES:RSA+AESGCM:RSA+AES:!aNULL:!eNULL:!LOW:!EXPORT:!MEDIUM:!MD5:!PSK:!RSAPSK:!SRP:!DSS:!CAMELLIA:!RC4:!3DES
-    ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA
+    # ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA
+    ssl-default-bind-ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA
     ssl-default-bind-options no-sslv3 no-tls-tickets
 
     # Setting tune.ssl.default-dh-param to 1024 by default, if your workload permits it you should set it to at least 2048
@@ -93,14 +94,14 @@ frontend www-frontend
 {% if conf_letsencrypt_enable is defined and conf_letsencrypt_enable == true %}
 {% if conf_haproxy_letsencrypt_backend is defined %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs
+    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs {{ conf_haproxy_alpn }}
 {% endif %}
 {% else %}
 {% if conf_haproxy_disable_ssl is defined and conf_haproxy_disable_ssl == true %}
     # SSL disabled by conf_haproxy_disable_ssl: true
 {% else %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/
+    bind :443 ssl crt /etc/certs/ {{ conf_haproxy_alpn }}
 {% endif %}
 {% endif %}
 {% endif %}
@@ -158,14 +159,14 @@ frontend www-ssl-frontend
 {% if conf_letsencrypt_enable is defined and conf_letsencrypt_enable == true %}
 {% if conf_haproxy_letsencrypt_backend is defined %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs
+    bind :443 ssl crt /etc/certs/ crt /mnt/glusterfs/gvol0/brick1/certs {{ conf_haproxy_alpn }}
 {% endif %}
 {% else %}
 {% if conf_haproxy_disable_ssl is defined and conf_haproxy_disable_ssl == true %}
     # SSL disabled by conf_haproxy_disable_ssl: true
 {% else %}
     # See: http://comments.gmane.org/gmane.comp.web.haproxy/18273
-    bind :443 ssl crt /etc/certs/
+    bind :443 ssl crt /etc/certs/ {{ conf_haproxy_alpn }}
 {% endif %}
 {% endif %}
 
