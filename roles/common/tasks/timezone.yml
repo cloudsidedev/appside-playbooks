@@ -13,7 +13,7 @@
   tags: ntp
 
 - name: install ntp (Debian family)
-  apt: pkg=ntp state=installed
+  apt: pkg=ntp state=present
   when: ansible_os_family == "Debian"
   tags: [ ntp, update ]
 

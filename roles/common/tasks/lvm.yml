@@ -3,7 +3,7 @@
 # file: playbooks/roles/common/tasks/lvm.yml
 
 - name: be sure base lvm is installed (Debian family)
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - lvm2
     - xfsprogs

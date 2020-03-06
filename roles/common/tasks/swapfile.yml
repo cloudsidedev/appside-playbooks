@@ -61,7 +61,7 @@
   when: conf_swapfile_delete
 
 # - name: be sure acl package is installed (Debian family)
-#   apt: pkg={{ item }} state=installed
+#   apt: pkg={{ item }} state=present
 #   with_items:
 #     - acl
 #   when: ansible_os_family == "Debian"

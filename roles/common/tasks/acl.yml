@@ -3,7 +3,7 @@
 # file: playbooks/roles/common/tasks/acl.yml
 
 - name: be sure acl package is installed (Debian family)
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - acl
   when: ansible_os_family == "Debian"

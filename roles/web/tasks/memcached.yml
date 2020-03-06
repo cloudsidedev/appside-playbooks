@@ -17,7 +17,7 @@
   tags: [ memcached ]
 
 - name: install memcached.
-  package: name=memcached state=installed
+  package: name=memcached state=present
   register: memcached_install
   tags: [ memcached ]
 

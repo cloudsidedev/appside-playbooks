@@ -220,7 +220,7 @@
 # innobackupex --apply-log
 #
 - name: be sure percona-xtrabackup packages is installed (Debian family)
-  apt: pkg=percona-xtrabackup-24 state=installed
+  apt: pkg=percona-xtrabackup-24 state=present
   when: conf_backup_client == true and conf_backup_mysqldump == true and ansible_os_family == "Debian"
   tags: [ borg, borgmatic ]
 
@@ -249,7 +249,7 @@
 # elasticdump
 #
 - name: be sure nodejs packages packages are installed (Debian family)
-  apt: pkg=npm state=installed force=yes
+  apt: pkg=npm state=present force=yes
   when: conf_backup_client == true and conf_backup_elasticdump == true and ansible_os_family == "Debian"
   tags: [ borg, borgmatic ]
 

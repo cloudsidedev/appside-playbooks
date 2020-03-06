@@ -24,7 +24,7 @@
   tags: [ etckeeper ]
 
 - name: be sure etckeeper package is installed (Debian family)
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - "{{ var_package_git }}"
     - curl
@@ -33,7 +33,7 @@
   tags: [ etckeeper ]
 
 - name: be sure etckeeper package is installed (RedHat Family)
-  package: name={{ item }} state=installed
+  package: name={{ item }} state=present
   with_items:
     - "{{ var_package_git }}"
     - curl

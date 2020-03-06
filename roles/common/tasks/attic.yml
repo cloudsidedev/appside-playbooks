@@ -101,7 +101,7 @@
 #     conf_attic_host
 
 - name: be sure attic build packages are installed (Debian family)
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     # - build-essential
     - libacl1-dev
@@ -178,7 +178,7 @@
 # innobackupex --apply-log
 #
 - name: be sure percona-xtrabackup packages is installed (Debian family)
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - percona-xtrabackup
   when: conf_attic_client == true and conf_attic_mysqldump == true and ansible_os_family == "Debian"
@@ -209,14 +209,14 @@
 # elasticdump
 #
 - name: be sure nodejs packages packages are installed (Debian family)
-  apt: pkg={{ item }} state=installed force=yes
+  apt: pkg={{ item }} state=present force=yes
   with_items:
     - npm
   when: conf_attic_client == true and conf_attic_elasticdump == true and ansible_os_family == "Debian"
   tags: [ attic, atticmatic ]
 
 - name: be sure nodejs packages packages are installed (Debian family)
-  apt: pkg={{ item }} state=installed force=yes
+  apt: pkg={{ item }} state=present force=yes
   with_items:
     - nodejs
     - nodejs-legacy
