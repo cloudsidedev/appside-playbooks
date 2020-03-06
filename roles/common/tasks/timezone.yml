@@ -9,7 +9,13 @@
 - name: /etc/timezone (Debian family)
   copy: content="{{ conf_timezone }}\n" dest=/etc/timezone owner=root group={{ conf_root_group }} mode=0644
   notify: handle_update_timezone
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian" and ansible_lsb.major_release|int < 18
+  tags: ntp
+
+- name: /etc/timezone (Debian family)
+  copy: content="{{ conf_timezone }}\n" dest=/etc/timezone owner=root group={{ conf_root_group }} mode=0644
+  notify: handle_update_timezone
+  when: ansible_os_family == "Debian" and ansible_lsb.major_release|int >= 18
   tags: ntp
 
 - name: install ntp (Debian family)
@@ -25,5 +31,11 @@
 
 - name: reconfigure /etc/timezone (Debian family)
   shell: dpkg-reconfigure --frontend noninteractive tzdata
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian" and ansible_lsb.major_release|int < 18
   tags: ntp
+
+- name: reconfigure /etc/timezone (Debian family)
+  shell: timedatectl set-timezone {{ conf_timezone }}
+  when: ansible_os_family == "Debian" and ansible_lsb.major_release|int >= 18
+  tags: ntp
+
