@@ -57,6 +57,8 @@ conf_unwanted_packages:
     - byobu
     - nano
     - manpages-dev
+    - subversion
+    - screen
 conf_base_packages:
     - xfsprogs
     - deborphan
@@ -67,7 +69,7 @@ conf_base_packages:
     - bsd-mailx
     - vim
     - uptimed
-    - screen
+    # - screen
     - tmux
     - mosh
     - finger
@@ -78,7 +80,7 @@ conf_base_packages:
     - whois
     - htop
     - ccze
-    - subversion
+    # - subversion
     - nmap
     - dnsutils
     - wget

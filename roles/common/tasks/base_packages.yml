@@ -46,6 +46,11 @@
   when: conf_base_packages_custom is defined and ansible_os_family == "Debian"
   tags: [ common, pkg, base_packages ]
 
+- name: purge custom unwanted packages (Debian family)
+  apt: pkg={{ conf_unwanted_packages_custom }} state=absent purge=yes
+  ignore_errors: yes
+  when: ansible_os_family == "Debian"
+
 - name: symlink ccze
   file: src=/usr/local/bin/colorize dest=/usr/local/bin/ccze state=link
   when: ansible_distribution == "FreeBSD"

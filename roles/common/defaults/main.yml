@@ -78,6 +78,7 @@ conf_acl: []
 # Base
 #
 conf_base_packages_custom: []
+conf_undwanted_packages_custom: []
 
 #
 # snmpd
