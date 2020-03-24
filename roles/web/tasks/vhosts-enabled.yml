@@ -16,7 +16,7 @@
   when: ansible_os_family == "Debian"
   notify:
     - handle_reload_apache2
-    - handle_reload_varnish
+    - handle_restart_varnish
   tags: [ vhosts ]
 
 - name: mv vhost from /var/www/vhosts-archived/ to vhosts/ if enabled (Common)
@@ -52,7 +52,7 @@
   with_dict: '{{ conf_vhosts_common }}'
   notify:
     - handle_reload_apache2
-    - handle_reload_varnish
+    - handle_restart_varnish
   tags: [ vhosts ]
 
 # testing == staging == production (/var/www/vhosts/foo/current/web)
@@ -64,7 +64,7 @@
   with_dict: '{{ conf_vhosts_common }}'
   notify:
     - handle_reload_apache2
-    - handle_reload_varnish
+    - handle_restart_varnish
   tags: [ vhosts ]
 
 # - name: deploy vhost templates if enabled (Common, prod)
@@ -73,7 +73,7 @@
 #   with_dict: '{{ conf_vhosts_common }}'
 #   notify:
 #     - handle_reload_apache2
-#     - handle_reload_varnish
+#     - handle_restart_varnish
 #   tags: [ vhosts ]
 
 #
