@@ -5,7 +5,7 @@
 {% if item.value.htaccess is defined %}
 {{ item.value.htaccess }}{% endif %}
 
-{% if item.value.htpasswd_password != false %}
+{% if item.value.htpasswd_password != false and item.value.htaccess_basic_auth_enable is not defined or item.value.htaccess_basic_auth_enable == true %}
 # BEGIN Basic Auth
 AuthType Basic
 AuthName "Protectd"
