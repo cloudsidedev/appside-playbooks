@@ -1,0 +1,23 @@
+#!/bin/bash
+
+KEEPALIVED_PROC="keepalived"
+conf=/etc/keepalived/keepalived.conf
+
+vip=$(expr "$(cat $conf)" : '.*\bvirtual_ipaddress\s*{\s*\(.*\)/*}')
+vip=`expr "$vip" : '\([^ ]*\)' | sed 's/\./\\\\./g'`
+
+if ip addr | grep -q "$vip"
+then    echo -n "[Primary] "
+else    echo -n "[Secondary] "
+fi
+
+
+if pidof $KEEPALIVED_PROC >/dev/null
+then
+	echo "keepalived running"
+	exit 0
+else
+	echo -n "Restarting keepalived... "
+	sudo systemctl restart --quiet keepalived.service
+	echo "done"
+fi

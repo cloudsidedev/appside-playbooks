@@ -34,6 +34,10 @@
   # when: ansible_distribution == "Ubuntu"
   tags: [ haproxy, keepalived ]
 
+- name: deploy /usr/local/bin/check_keepalived.sh
+  template: src=usr/local/bin/check_keepalived.sh.j2 dest=/usr/local/bin/check_keepalived.sh owner=root group={{ conf_root_group }} mode=0755
+  tags: [ haproxy, keepalived ]
+
 - name: deploy /etc/keepalived/keepalived.cfg
   template: src=etc/keepalived/keepalived.conf.j2 dest=/etc/keepalived/keepalived.conf owner=root group={{ conf_root_group }} mode=0644
   notify: handle_restart_keepalived
@@ -42,4 +46,21 @@
 
 - name: start keepalived
   service: name=keepalived enabled=yes state=started
+  tags: [ haproxy, keepalived ]
+
+- name: deploy keepalived entries if enabled
+  lineinfile: dest=/etc/cron.d/keepalived
+              regexp='^MAILTO=""'
+              line='MAILTO=""'
+              insertbefore=BOF
+              create=yes
+              owner=root group={{ conf_root_group }} mode=0644
+              state=present
+  tags: [ haproxy, keepalived ]
+
+- name: deploy keepalived entries if enabled
+  lineinfile: dest=/etc/cron.d/keepalived
+              line='*/5 * * * * root [ -x /usr/local/bin/check_keepalived.sh ] && /usr/local/bin/check_keepalived.sh'
+              insertafter=EOF
+              state=present
   tags: [ haproxy, keepalived ]
