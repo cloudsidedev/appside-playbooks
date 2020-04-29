@@ -15,6 +15,10 @@
 {% endfor %}
 {% endif %}
 
+{% if item.value.vhost_directives is defined %}
+        {{ item.value.vhost_directives | indent(width=8) }}
+{% endif %}
+
         ServerAdmin {{ item.value.serveradmin }}
 
         DocumentRoot /var/www/vhosts/{{ item.key }}/current
