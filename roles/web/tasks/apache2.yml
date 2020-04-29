@@ -171,6 +171,14 @@
   ignore_errors: yes
   tags: [ apache2, apache2-conf ]
 
+- name: enable apache2 custom modules
+  apache2_module: state=present name={{ item }}
+  with_items: "{{ conf_apache2_custom_modules }}"
+  notify: handle_reload_apache2
+  when: ansible_os_family == "Debian" and conf_apache2_custom_modules is defined
+  ignore_errors: yes
+  tags: [ apache2, apache2-conf ] 
+
 - name: apache2 service state
   service: name=apache2 state=started enabled=yes
   when: ansible_os_family == "Debian"
