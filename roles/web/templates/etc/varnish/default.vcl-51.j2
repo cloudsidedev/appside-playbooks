@@ -15,7 +15,7 @@ backend default {
   {{ conf_varnish_backend_default }}
   {% if conf_mysql_flavour_debian_family == "percona-xtradb-cluster" %}
 {{ conf_varnish_backend_probe_mysql_default }}
-  {% else %}}
+  {% else %}
 {{ conf_varnish_backend_probe_default }}
   {% endif %}
 }
