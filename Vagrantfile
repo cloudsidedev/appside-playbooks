@@ -114,7 +114,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.playbook = "playbooks/generic.yml"
       ansible.inventory_path = "~/.appflow/tenant/appflow-ttss/development/inventory"
       ansible.vault_password_file = "~/.appflow/vault/ttss/development"
-      ansible.sudo = true
+      ansible.become = true
       ansible.tags = ANSIBLE_TAGS
     end
 
@@ -147,7 +147,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.playbook = "playbooks/generic.yml"
       ansible.inventory_path = "~/.appflow/tenant/appflow-ttss/development/inventory"
       ansible.vault_password_file = "~/.appflow/vault/ttss/development"
-      ansible.sudo = true
+      ansible.become = true
       ansible.tags = ANSIBLE_TAGS
       ansible.skip_tags = ANSIBLE_TAGS_SKIP
     end
