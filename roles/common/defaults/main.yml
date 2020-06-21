@@ -86,6 +86,45 @@ conf_undwanted_packages_custom: []
 conf_snmpd_enable: false
 
 #
+# lshell
+#
+conf_lshell_enable: false
+conf_lshell_config: |
+  [global]
+  logpath         : /var/log/lshell/
+  loglevel        : 2
+  #logfilename     : %y%m%d-%u
+  #logfilename     : syslog
+  #syslogname      : myapp
+  #include_dir     : /etc/lshell.d/*.conf
+
+  [default]
+  allowed         : ['ls','echo','cd','ll']
+  forbidden       : [';', '&', '|','`','>','<', '$(', '${']
+  #sudo_commands   : ['ls', 'more']
+  warning_counter : 2
+  aliases         : {'ll':'ls -l', 'vim':'rvim'}
+  #intro           : "== My personal intro ==\nWelcome to lshell\nType '?' or 'help' to get the list of allowed commands"
+  #prompt          : "%u@%h"
+  #prompt_short    : 0
+  #timer           : 5
+  #path            : ['/home/bla/','/etc']
+  #home_path       : '/home/bla/'
+  #env_path        : ':/usr/local/bin:/usr/sbin'
+  #allowed_cmd_path: ['/home/bla/bin','/home/bla/stuff/libexec']
+  #env_vars        : {'foo':1, 'bar':'helloworld'}
+  #scp             : 1
+  #scp_upload       : 0
+  #scp_download     : 0
+  #sftp            : 1
+  #overssh         : ['ls', 'rsync']
+  strict          : 0
+  #scpforce        : '/home/bla/uploads/'
+  #history_size     : 100
+  #history_file     : "/home/%u/.lshell_history"
+  #login_script     : "/path/to/myscript.sh"
+
+#
 # Jailkit
 #
 conf_jailkit_enable: false
@@ -219,6 +258,15 @@ conf_sftp_allow_pubkey: False
 conf_sftp_enable_selinux_support: False
 conf_sftp_enable_logging: False
 conf_sftp_nologin_shell: /sbin/nologin
+
+#
+# Telegraf
+#
+conf_telegraf_enable: false
+# conf_telegraf_conf_global: 
+# conf_telegraf_conf_agent: 
+# conf_telegraf_conf_outputs: 
+# conf_telegraf_conf_inputs: 
 
 #
 # Zabbix
