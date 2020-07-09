@@ -221,6 +221,23 @@ conf_sftp_enable_logging: False
 conf_sftp_nologin_shell: /sbin/nologin
 
 #
+# netdata
+#
+conf_netdata_enable: false
+conf_netdata_health_alarm_notify: |
+  use_fqdn="YES"
+conf_netdata_conf: |
+  [global]
+      run as user = netdata
+      history = 3600
+      process scheduling policy = idle
+      OOM score = 1000
+  [web]
+      web files owner = root
+      web files group = netdata
+      bind to = localhost
+
+#
 # Zabbix
 #
 conf_zabbix_version: 3.4

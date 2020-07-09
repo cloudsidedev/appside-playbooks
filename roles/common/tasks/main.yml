@@ -197,6 +197,10 @@
   when: conf_backup_client == true
   tags: [ common ]
 
+- import_tasks: netdata.yml
+  when: conf_netdata_enable == true
+  tags: [ common ]
+
 - name: include custom playbook tasks
   include_tasks: "{{ item.src }}"
   when: conf_custom_playbook_enable is defined and conf_custom_playbook_enable == true and item.state|default('disabeld') == 'enabled'
