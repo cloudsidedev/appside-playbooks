@@ -1,0 +1,26 @@
+---
+
+# file: playbooks/roles/common/tasks/lshell.yml
+
+#- name: be sure lshell package is installed (Debian family)
+#  apt: pkg={{ item }} state=present
+#  with_items:
+#    - lshell
+#  when: ansible_os_family == "Debian"
+#  tags: [ lshell ]
+
+- name: be sure base lshell is installed (Debian family)
+  apt: deb=http://de.archive.ubuntu.com/ubuntu/pool/universe/l/lshell/lshell_0.9.17-1_all.deb
+  when: ansible_os_family == "Debian"
+  tags: [ lshell ]
+
+#- name: be sure lshell package is installed (RedHat Family)
+#  package: name={{ item }} state=present
+#  with_items:
+#    - lshell
+#  when: ansible_os_family == "RedHat"
+#  tags: [ lshell ]
+
+- name: deploy /etc/lshell.conf
+  template: src=etc/lshell.conf.j2 dest=/etc/lshell.conf owner=root group={{ conf_root_group }} mode=0644
+  tags: [ lshell, lshell-conf ]
