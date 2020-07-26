@@ -201,6 +201,9 @@
   when: conf_backup_client == true
   tags: [ common ]
 
+- import_tasks: netdata.yml
+  when: conf_netdata_enable == true
+
 - import_tasks: telegraf.yml
   when: conf_telegraf_enable is defined and conf_telegraf_enable == true
   tags: [ common ]

@@ -83,3 +83,6 @@
 
 - name: restart firewall
   service: name=firewall state=restarted
+
+- name: handle_restart_netdata
+  service: name=netdata state=restarted

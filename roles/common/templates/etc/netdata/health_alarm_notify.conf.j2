@@ -1,0 +1,36 @@
+#
+# --- THIS FILE IS AUTOMATICALLY PROVISIONED THROUGH ANSIBLE ---
+#
+
+# Configuration for alarm notifications
+#
+# This configuration is used by: alarm-notify.sh
+# changes take effect immediately (the next alarm will use them).
+#
+# alarm-notify.sh can send:
+# - e-mails (using the sendmail command),
+# - push notifications to your mobile phone (pushover.net),
+# - messages to your slack team (slack.com),
+# - messages to your alerta server (alerta.io),
+# - messages to your flock team (flock.com),
+# - messages to your discord guild (discordapp.com),
+# - messages to your telegram chat / group chat (telegram.org)
+# - sms messages to your cell phone or any sms enabled device (twilio.com)
+# - sms messages to your cell phone or any sms enabled device (messagebird.com)
+# - sms messages to your cell phone or any sms enabled device (smstools3)
+# - notifications to users on pagerduty.com
+# - push notifications to iOS devices (via prowlapp.com)
+# - notifications to Amazon SNS topics (aws.amazon.com)
+# - messages to your irc channel on your selected network
+# - messages to a local or remote syslog daemon
+# - message to Microsoft Team (through webhook)
+# - message to Rocket.Chat (through webhook)
+# - message to Google Hangouts Chat (through webhook)
+#
+# The 'to' line given at netdata alarms defines a *role*, so that many
+# people can be notified for each role.
+#
+# This file is a BASH script itself.
+#
+
+{{ conf_netdata_health_alarm_notify }}
