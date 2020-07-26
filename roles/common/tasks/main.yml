@@ -104,6 +104,10 @@
 - import_tasks: lvm.yml
   tags: [ common ]
 
+- import_tasks: lshell.yml
+  when: conf_lshell_enable is defined and conf_lshell_enable == true
+  tags: [ common, lshell ]
+
 - import_tasks: jailkit.yml
   when: conf_jailkit_enable is defined and conf_jailkit_enable == true
   tags: [ common, jailkit, jails ]
@@ -199,6 +203,9 @@
 
 - import_tasks: netdata.yml
   when: conf_netdata_enable == true
+
+- import_tasks: telegraf.yml
+  when: conf_telegraf_enable is defined and conf_telegraf_enable == true
   tags: [ common ]
 
 - name: include custom playbook tasks

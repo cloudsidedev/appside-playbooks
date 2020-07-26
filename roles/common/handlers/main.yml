@@ -72,6 +72,9 @@
 - name: handle_restart_nfs
   service: name=nfs-kernel-server state=restarted
 
+- name: handle_restart_telegraf
+  service: name=telegraf state=restarted
+
 - name: handle_assh_configbuild
   shell: /usr/local/go/bin/assh config build > ~/.ssh/config
 

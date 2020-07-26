@@ -1,0 +1,19 @@
+#
+# --- THIS FILE IS AUTOMATICALLY PROVISIONED THROUGH ANSIBLE ---
+#
+
+{% if conf_telegraf_conf_global is defined %}
+{{ conf_telegraf_conf_global }}
+{% endif %}
+
+{% if conf_telegraf_conf_agent is defined %}
+{{ conf_telegraf_conf_agent }}
+{% endif %}
+
+{% if conf_telegraf_conf_outputs is defined %}
+{{ conf_telegraf_conf_outputs }}
+{% endif %}
+
+{% if conf_telegraf_conf_inputs is defined %}
+{{ conf_telegraf_conf_inputs }}
+{% endif %}

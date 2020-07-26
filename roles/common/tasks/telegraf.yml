@@ -1,0 +1,37 @@
+---
+
+# file: playbooks/roles/common/tasks/telegraf.yml
+
+- name: telegraf apt-key (Ubuntu)
+  apt_key:
+    url: "https://repos.influxdata.com/influxdb.key"
+    id: 2582E0C5
+    state: present
+  when: ansible_distribution == "Ubuntu"
+  tags: [ telegraf ]
+
+# - name: "Debian | Add Telegraf repository (using LSB)"
+#   apt_repository:
+#     repo: "deb https://repos.influxdata.com/{{ ansible_distribution|lower }} {{ ansible_lsb.codename }} stable"
+#     filename: "telegraf"
+#     state: present
+#   become: yes
+#   when:
+#     - telegraf_agent_package_method == "repo"
+#     - ansible_lsb is defined
+#     - ansible_lsb.codename is defined
+
+- name: enable repo repos.influxdata.com (Ubuntu)
+  apt_repository: repo='deb https://repos.influxdata.com/{{ ansible_distribution|lower }} {{ ansible_lsb.codename }} stable' update_cache=yes
+  when: ansible_distribution == "Ubuntu"
+  tags: [ telegraf ]
+
+- name: install telegraf (Debian family)
+  package: name=telegraf state=latest
+  when: ansible_os_family == "Debian"
+  tags: [ telegraf ]
+
+- name: deploy /etc/telegraf/telegraf.conf
+  template: src=etc/telegraf/telegraf.conf.j2 dest=/etc/telegraf/telegraf.conf owner=root group={{ conf_root_group }} mode=0644
+  notify: handle_restart_telegraf
+  tags: [ telegraf, telegraf-conf ]
